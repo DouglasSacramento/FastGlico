@@ -1,0 +1,144 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Mulish", serif;
+}
+
+:root {
+  font-size: 62.5%;
+}
+
+.hide {
+  display: none;
+}
+
+button {
+  cursor: pointer;
+  padding: 1.2rem 2rem;
+  border-radius: 0.8rem;
+  border: solid 0.15rem #007b00;
+
+  background-color: #007b00;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+input {
+  padding: 1.2rem;
+  border-radius: 0.8rem;
+  border: solid 1px #dadada;
+  outline: none;
+  width: 100%;
+}
+
+input:focus {
+  border: 0.15rem solid #007b00;
+}
+
+body {
+  font-size: 1.6rem;
+  overflow: hidden;
+  padding: 0 1.5rem;
+  background-color: #f8f8f8;
+}
+
+.page {
+  height: 100vh;
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+header {
+  padding: 4rem;
+  text-align: center;
+}
+
+main #options-home {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+
+  margin-bottom: 3rem;
+  padding: 2rem;
+}
+
+h2 {
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
+  padding-bottom: 1rem;
+  font-weight: 700;
+}
+
+h3 span {
+  color: #007b00;
+  font-weight: 300;
+}
+
+#options-home button + button,
+#options-register button + button {
+  margin-left: 1rem;
+}
+
+.card {
+  position: relative;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  padding: 2rem 4rem 8rem;
+
+  background-color: white;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+}
+
+th {
+  text-align: start;
+  padding: 0.8rem 1rem;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.empty {
+  text-align: start;
+  padding: 0.8rem 1rem;
+  background-color: transparent;
+}
+
+td {
+  text-align: start;
+  padding: 0.8rem 1rem;
+}
+
+i {
+  cursor: pointer;
+}
+
+.card p {
+  position: absolute;
+  left: 50%;
+  bottom: 0.5rem;
+  transform: translate(-50%);
+  font-size: 0.9rem;
+}
+
+#options-register form {
+  display: flex;
+  flex-direction: column;
+}
+
+#options-register input {
+  margin-bottom: 2rem;
+}
+
+#cancel {
+  color: #000000;
+  background-color: #c8c8c8;
+  border: solid 0.15rem #c8c8c8;
+}

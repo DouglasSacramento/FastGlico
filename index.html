@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fast'Glico</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>FastGlico</h1>
+    </header>
+    <h3></h3>
+
+    <div class="page">
+      <main>
+        <section class="card" id="go-register">
+          <div id="options-home">
+            <button id="btn-register">Cadastrar</button>
+            <button id="btn-search">Pesquisar</button>
+            <input
+              id="input-cpf"
+              type="text"
+              placeholder="Digite um cpf"
+              maxlength="14"
+              oninput="this.value = formatCpf(this.value)"
+            />
+          </div>
+          <h2></h2>
+          <table></table>
+        </section>
+
+        <section class="hide" id="screen-register">
+          <div id="options-register">
+            <form>
+              <label for="name">Nome</label>
+              <input type="text" id="name" />
+              <label for="birth">Nascimento</label>
+              <input
+                type="text"
+                id="birth"
+                maxlength="10"
+                oninput="this.value = formatDate(this.value)"
+              />
+              <label for="cpf">CPF</label>
+              <input
+                type="text"
+                id="cpf"
+                maxlength="14"
+                oninput="this.value = formatCpf(this.value)"
+              />
+            </form>
+            <button id="savePacient">Salvar</button>
+            <button id="cancel">Cancelar</button>
+          </div>
+        </section>
+      </main>
+      <footer></footer>
+    </div>
+  </body>
+</html>
