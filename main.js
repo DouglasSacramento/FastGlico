@@ -41,6 +41,7 @@ const listenerInputCpf = document.getElementById("input-cpf");
 const btnEditPacient = document.getElementById("btn-edit");
 const table = document.querySelector("table");
 const inputName = document.getElementById("name");
+const infoTable = document.querySelector("table");
 
 //--------------------------------------------------------------------------------------
 /* FUNÇÕES */
@@ -134,6 +135,35 @@ function generateId() {
   return id;
 }
 
+function makeTable(pacient) {
+  let message = document.querySelector("h2");
+  const insertTable = document.querySelector("table");
+
+  message.textContent = "";
+  infoTable.classList.remove("hide");
+  insertTable.innerHTML = `
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Nascimento</th>
+        <th>CPF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>${pacient.id}</td>
+        <td>${pacient.name}</td>
+        <td>${formatDateInput(pacient.nascimento)}</td>
+        <td>${formatCpf(pacient.cpf)}</td>
+        <td><i class="ph-bold ph-pencil-simple-line edit"></i></td>
+        <td><i class="ph-bold ph-trash-simple delete"></i></td>
+      </tr>
+    </tbody>
+    <p>Entregue em: <span>${pacient.date}</span></p>
+  `;
+}
+
 //--------------------------------------------------------------------------------------
 /* EVENTOS */
 newCount();
@@ -158,37 +188,12 @@ btnCancel.addEventListener("click", () => {
 btnSearch.addEventListener("click", () => {
   const cpf = document.getElementById("input-cpf").value;
   const pacient = searchPacientByCpf(cpf);
-  const insertTable = document.querySelector("table");
-  const infoTable = document.querySelector("table");
-  let message = document.querySelector("h2");
 
   if (pacient === undefined || cpf.length < 14) {
     messageForUser();
     infoTable.classList.add("hide");
   } else {
-    message.textContent = "";
-    infoTable.classList.remove("hide");
-    insertTable.innerHTML = `
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Nascimento</th>
-        <th>CPF</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>${pacient.id}</td>
-        <td>${pacient.name}</td>
-        <td>${formatDateInput(pacient.nascimento)}</td>
-        <td>${formatCpf(pacient.cpf)}</td>
-        <td><i class="ph-bold ph-pencil-simple-line edit"></i></td>
-        <td><i class="ph-bold ph-trash-simple delete"></i></td>
-      </tr>
-    </tbody>
-    <p>Entregue em: <span>${pacient.date}</span></p>
-  `;
+    makeTable(pacient);
   }
 });
 
