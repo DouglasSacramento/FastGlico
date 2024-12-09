@@ -1,12 +1,14 @@
-const getLocalStorage = () => localStorage.getItem("db_pacient") ?? [];
+/* VARIÁVEIS CRUD */
+const getLocalStorage = () =>
+  JSON.parse(localStorage.getItem("db_pacient")) ?? [];
 
 const setLocalStorage = (dbPacient) =>
   localStorage.setItem("db_pacient", JSON.stringify(dbPacient));
 
 //CRUD -> Create
 const createPacient = (pacient) => {
-  const dbPacient = JSON.parse(getLocalStorage());
-  pacient.id = dbPacient.length + 1;
+  const dbPacient = getLocalStorage();
+  pacient.id = generateId();
   dbPacient.push(pacient);
   setLocalStorage(dbPacient);
 };
@@ -23,33 +25,35 @@ const updatePacient = (index, pacient) => {
 
 //CRUD -> Delete
 const deletePacient = (index) => {
-  const dbPacient = JSON.parse(readPacient());
+  const dbPacient = readPacient();
   dbPacient.splice(index, 1);
   setLocalStorage(dbPacient);
 };
 
+//--------------------------------------------------------------------------------------
 /* VARIÁVEIS */
 const countTotal = document.querySelector("h3");
+const btnRegister = document.getElementById("btn-register");
+const btnCancel = document.getElementById("cancel");
+const btnSearch = document.getElementById("btn-search");
+const btnSavePacient = document.getElementById("savePacient");
+const listenerInputCpf = document.getElementById("input-cpf");
+const btnEditPacient = document.getElementById("btn-edit");
+const table = document.querySelector("table");
+const inputName = document.getElementById("name");
 
+//--------------------------------------------------------------------------------------
 /* FUNÇÕES */
 function newCount() {
-  const count = JSON.parse(getLocalStorage()).length;
+  const count = readPacient().length;
   countTotal.innerHTML = `Total de aparelhos entregues: <span>${count} unidades</span> `;
 }
 
 function searchPacientByCpf(cpf) {
-  const data = localStorage.getItem("db_pacient");
+  const data = readPacient();
 
-  if (!data) {
-    console.error(
-      "Lista de pacientes vazia. Necessário realizar algum cadastro!"
-    );
-    return null;
-  }
-
-  const db_pacient = JSON.parse(data);
-  const pacient = db_pacient.find((p) => p.cpf === cpf);
-  return pacient || "CPF não encontrado";
+  const pacient = data.find((thisPacient) => thisPacient.cpf === cpf);
+  return pacient;
 }
 
 function togglePage() {
@@ -70,10 +74,18 @@ function hideTable() {
   }
 }
 
-function clearInputs() {
+function clearInputsRegister() {
   document.getElementById("name").value = "";
   document.getElementById("birth").value = "";
   document.getElementById("cpf").value = "";
+}
+
+function clearInputCpf() {
+  document.getElementById("input-cpf").value = "";
+}
+
+function clearMessageNotPacient() {
+  document.querySelector("h2").textContent = "";
 }
 
 function formatCpf(cpf) {
@@ -84,7 +96,7 @@ function formatCpf(cpf) {
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
 
-function formatDate(date) {
+function formatDateInput(date) {
   return date
     .replace(/\D/g, "")
     .replace(/(\d{2})(\d)/, "$1/$2")
@@ -92,71 +104,111 @@ function formatDate(date) {
     .slice(0, 10);
 }
 
+function formatDateRegister() {
+  const date = new Date().toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return date.replace(",", " às").replace(":", "h");
+}
+
+function messageForUser() {
+  document.querySelector("h2").textContent = "Paciente não Encontrado!";
+}
+
+function editPacient() {}
+
+function delPacient(id) {
+  const index = readPacient().findIndex((pacient) => pacient.id === id);
+
+  deletePacient(index);
+  document.querySelector("table").classList.add("hide");
+  document.getElementById("input-cpf").value = "";
+}
+
+function generateId() {
+  id++;
+  return id;
+}
+
+//--------------------------------------------------------------------------------------
 /* EVENTOS */
 newCount();
+let id = 0;
 
-document.getElementById("btn-register").addEventListener("click", () => {
+btnRegister.addEventListener("click", () => {
   togglePage();
+
   countTotal.classList.add("hide");
+  inputName.focus();
 });
 
-document.getElementById("cancel").addEventListener("click", () => {
-  document.getElementById("input-cpf").value = "";
+btnCancel.addEventListener("click", () => {
   document.querySelector("h2").textContent = "";
+  countTotal.classList.remove("hide");
+  clearInputCpf();
+  clearInputsRegister();
   togglePage();
   hideTable();
-  countTotal.classList.remove("hide");
 });
 
-document.getElementById("btn-search").addEventListener("click", () => {
+btnSearch.addEventListener("click", () => {
   const cpf = document.getElementById("input-cpf").value;
   const pacient = searchPacientByCpf(cpf);
   const insertTable = document.querySelector("table");
+  const infoTable = document.querySelector("table");
+  let message = document.querySelector("h2");
 
-  if ((pacient.name, pacient.nascimento, pacient.cpf === undefined)) {
-    document.querySelector("h2").textContent = "Paciente não Encontrado!";
-    if (cpf != pacient.cpf) {
-      document.querySelector("table").classList.add("hide");
-    }
-    return;
+  if (pacient === undefined || cpf.length < 14) {
+    messageForUser();
+    infoTable.classList.add("hide");
   } else {
-    document.querySelector("h2").textContent = "";
-    document.querySelector("table").classList.remove("hide");
+    message.textContent = "";
+    infoTable.classList.remove("hide");
     insertTable.innerHTML = `
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Nascimento</th>
-          <th>CPF</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>${pacient.id}</td>
-          <td>${pacient.name}</td>
-          <td>${formatDate(pacient.nascimento)}</td>
-          <td>${formatCpf(pacient.cpf)}</td>
-          <td><i class="ph-bold ph-pencil-simple-line"></i></td>
-          <td><i class="ph-bold ph-trash-simple"></i></td>
-        </tr>
-      </tbody>
-      <p>Cadastro realizado em: 02/12/2024 às 22h43</p>
-      `;
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Nascimento</th>
+        <th>CPF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>${pacient.id}</td>
+        <td>${pacient.name}</td>
+        <td>${formatDateInput(pacient.nascimento)}</td>
+        <td>${formatCpf(pacient.cpf)}</td>
+        <td><i class="ph-bold ph-pencil-simple-line edit"></i></td>
+        <td><i class="ph-bold ph-trash-simple delete"></i></td>
+      </tr>
+    </tbody>
+    <p>Entregue em: <span>${pacient.date}</span></p>
+  `;
   }
 });
 
-document.getElementById("savePacient").addEventListener("click", () => {
+btnSavePacient.addEventListener("click", () => {
   const pacient = {
     id: "",
     name: document.getElementById("name").value,
     nascimento: document.getElementById("birth").value,
     cpf: document.getElementById("cpf").value,
+    date: formatDateRegister(),
   };
 
   const { name, nascimento, cpf } = pacient;
   if (!name || !nascimento || !cpf) {
     alert("Todos os campos são necessários!");
+    return;
+  }
+
+  if (searchPacientByCpf(cpf)) {
+    alert("Este CPF já está cadastrado!");
     return;
   }
 
@@ -166,15 +218,24 @@ document.getElementById("savePacient").addEventListener("click", () => {
   }
 
   createPacient(pacient);
-  clearInputs();
+  clearInputsRegister();
   togglePage();
-  document.getElementById("input-cpf").value = "";
+  clearInputCpf();
   hideTable();
   newCount();
+  clearMessageNotPacient();
   countTotal.classList.remove("hide");
 });
 
-document.getElementById("input-cpf").addEventListener("input", () => {
+listenerInputCpf.addEventListener("input", () => {
   hideTable();
-  document.querySelector("h2").textContent = "";
+  clearMessageNotPacient();
+});
+
+table.addEventListener("click", (event) => {
+  if (event.target.classList.contains("delete")) {
+    const id = Number(document.querySelector("tbody tr td").textContent.trim());
+    delPacient(id);
+    newCount();
+  }
 });

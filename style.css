@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "myFontLogo1";
+  src: url("./fonts/Whatdo.woff") format("woff"),
+    url("./fonts/Whatdo.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,6 +15,9 @@
 
 :root {
   font-size: 62.5%;
+
+  --hue: 210;
+  --main-color: hsl(var(--hue), 70%, 50%);
 }
 
 .hide {
@@ -17,9 +28,9 @@ button {
   cursor: pointer;
   padding: 1.2rem 2rem;
   border-radius: 0.8rem;
-  border: solid 0.15rem #007b00;
+  border: solid 0.15rem var(--main-color);
 
-  background-color: #007b00;
+  background-color: var(--main-color);
   color: white;
 }
 
@@ -36,7 +47,7 @@ input {
 }
 
 input:focus {
-  border: 0.15rem solid #007b00;
+  border: 0.15rem solid var(--main-color);
 }
 
 body {
@@ -55,6 +66,14 @@ body {
 header {
   padding: 4rem;
   text-align: center;
+}
+
+h1 {
+  font-family: "myFontLogo1", serif;
+  font-weight: normal;
+  font-size: 8rem;
+  letter-spacing: 1rem;
+  color: #535353;
 }
 
 main #options-home {
@@ -76,8 +95,8 @@ h3 {
   font-weight: 700;
 }
 
-h3 span {
-  color: #007b00;
+span {
+  color: var(--main-color);
   font-weight: 300;
 }
 
@@ -125,7 +144,8 @@ i {
   left: 50%;
   bottom: 0.5rem;
   transform: translate(-50%);
-  font-size: 0.9rem;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
 #options-register form {
