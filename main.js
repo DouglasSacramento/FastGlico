@@ -47,7 +47,7 @@ const infoTable = document.querySelector("table");
 /* FUNÇÕES */
 function newCount() {
   const count = readPacient().length;
-  countTotal.innerHTML = `Total de aparelhos entregues: <span>${count} unidades</span> `;
+  countTotal.innerHTML = `Total de aparelhos entregues: <span class="seeNames">${count} unidades</span> `;
 }
 
 function searchPacientByCpf(cpf) {
@@ -242,5 +242,18 @@ table.addEventListener("click", (event) => {
     const id = Number(document.querySelector("tbody tr td").textContent.trim());
     delPacient(id);
     newCount();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const seeNames = event.target;
+  if (seeNames.classList.contains("seeNames")) {
+    const allNames = readPacient();
+
+    console.log(
+      allNames.forEach((element) => {
+        console.log(`Nome: ${element.name}, CPF: ${element.cpf}`);
+      })
+    );
   }
 });
