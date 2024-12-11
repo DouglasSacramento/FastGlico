@@ -10,6 +10,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  text-decoration: none;
+
   font-family: "Mulish", serif;
 }
 
@@ -89,8 +91,16 @@ body {
 }
 
 header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
   padding: 4rem;
   text-align: center;
+}
+
+.ph-power {
+  font-size: 2.5rem;
 }
 
 h1 {
@@ -209,7 +219,8 @@ i {
   border: solid 0.15rem #c8c8c8;
 }
 
-.delete {
+.delete,
+.exit {
   color: #c80000;
 }
 
