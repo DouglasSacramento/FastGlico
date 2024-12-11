@@ -31,7 +31,7 @@ const deletePacient = (index) => {
 };
 
 //--------------------------------------------------------------------------------------
-/* VARIÁVEIS */
+/* VARIÁVEIS GLOBAIS */
 const countTotal = document.querySelector("h3");
 const btnRegister = document.getElementById("btn-register");
 const btnCancel = document.getElementById("cancel");
@@ -166,8 +166,9 @@ function makeTable(pacient) {
 
 //--------------------------------------------------------------------------------------
 /* EVENTOS */
-newCount();
 let id = 0;
+newCount();
+listenerInputCpf.focus();
 
 btnRegister.addEventListener("click", () => {
   togglePage();
@@ -176,18 +177,21 @@ btnRegister.addEventListener("click", () => {
   inputName.focus();
 });
 
-btnCancel.addEventListener("click", () => {
+btnCancel.addEventListener("click", (event) => {
+  event.preventDefault();
   document.querySelector("h2").textContent = "";
   countTotal.classList.remove("hide");
   clearInputCpf();
   clearInputsRegister();
   togglePage();
   hideTable();
+  listenerInputCpf.focus();
 });
 
-btnSearch.addEventListener("click", () => {
+btnSearch.addEventListener("click", (event) => {
   const cpf = document.getElementById("input-cpf").value;
   const pacient = searchPacientByCpf(cpf);
+  event.preventDefault();
 
   if (pacient === undefined || cpf.length < 14) {
     messageForUser();
@@ -195,9 +199,12 @@ btnSearch.addEventListener("click", () => {
   } else {
     makeTable(pacient);
   }
+
+  listenerInputCpf.focus();
 });
 
-btnSavePacient.addEventListener("click", () => {
+btnSavePacient.addEventListener("click", (event) => {
+  event.preventDefault();
   const pacient = {
     id: "",
     name: document.getElementById("name").value,
@@ -230,6 +237,7 @@ btnSavePacient.addEventListener("click", () => {
   newCount();
   clearMessageNotPacient();
   countTotal.classList.remove("hide");
+  listenerInputCpf.focus();
 });
 
 listenerInputCpf.addEventListener("input", () => {
@@ -245,15 +253,27 @@ table.addEventListener("click", (event) => {
   }
 });
 
+const openModal = (seeNames) => {
+  const modal = document.querySelector("dialog");
+
+  if (seeNames.classList.contains("seeNames")) {
+    let allNames = readPacient();
+    modal.innerHTML = "";
+    const titleModal = document.createElement("h4");
+    titleModal.innerText = "PACIENTES";
+    modal.appendChild(titleModal);
+
+    allNames.forEach((pacient) => {
+      const showPacients = document.createElement("p");
+      showPacients.innerHTML = `<b>Nome:</b><span> ${pacient.name}</span><br><b>Cpf:</b> <span>${pacient.cpf}</span>`;
+      modal.appendChild(showPacients);
+    });
+    modal.showModal();
+    clearMessageNotPacient();
+  }
+};
+
 document.addEventListener("click", (event) => {
   const seeNames = event.target;
-  if (seeNames.classList.contains("seeNames")) {
-    const allNames = readPacient();
-
-    console.log(
-      allNames.forEach((element) => {
-        console.log(`Nome: ${element.name}, CPF: ${element.cpf}`);
-      })
-    );
-  }
+  openModal(seeNames);
 });

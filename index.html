@@ -6,14 +6,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fast'Glico</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap"
       rel="stylesheet"
     />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <script src="/main.js" defer></script>
+    <script src="/js/main.js" defer></script>
   </head>
   <body>
     <header>
@@ -24,8 +24,8 @@
     <div class="page">
       <main>
         <section class="card" id="go-register">
-          <div id="options-home">
-            <button id="btn-register">Cadastrar</button>
+          <form id="options-home">
+            <button type="button" id="btn-register">Cadastrar</button>
             <button id="btn-search">Pesquisar</button>
             <input
               id="input-cpf"
@@ -34,14 +34,15 @@
               maxlength="14"
               oninput="this.value = formatCpf(this.value)"
             />
-          </div>
+          </form>
+
           <h2></h2>
           <table></table>
         </section>
 
         <section class="hide" id="screen-register">
-          <div id="options-register">
-            <form>
+          <div>
+            <form id="options-register">
               <label for="name">Nome</label>
               <input type="text" id="name" />
               <label for="birth">Nascimento</label>
@@ -58,13 +59,15 @@
                 maxlength="14"
                 oninput="this.value = formatCpf(this.value)"
               />
+              <button id="savePacient">Salvar</button>
+              <button id="cancel">Cancelar</button>
             </form>
-            <button id="savePacient">Salvar</button>
-            <button id="cancel">Cancelar</button>
           </div>
         </section>
       </main>
-      <footer></footer>
+      <dialog>
+        <button>Fechar</button>
+      </dialog>
     </div>
   </body>
 </html>
