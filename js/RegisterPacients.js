@@ -8,7 +8,7 @@ const setLocalStorage = (dbPacient) =>
 //CRUD -> Create
 const createPacient = (pacient) => {
   const dbPacient = getLocalStorage();
-  pacient.id = generateId();
+  pacient.id = new Date().getTime();
   dbPacient.push(pacient);
   setLocalStorage(dbPacient);
 };
@@ -24,9 +24,9 @@ const updatePacient = (index, pacient) => {
 };
 
 //CRUD -> Delete
-const deletePacient = (index) => {
+const deletePacient = (cpf) => {
   const dbPacient = readPacient();
-  dbPacient.splice(index, 1);
+  dbPacient.splice(cpf, 1);
   setLocalStorage(dbPacient);
 };
 
@@ -78,7 +78,7 @@ function hideTable() {
 function clearInputsRegister() {
   document.getElementById("name").value = "";
   document.getElementById("birth").value = "";
-  document.getElementById("cpf").value = "";
+  document.getElementById("docCpf").value = "";
 }
 
 function clearInputCpf() {
@@ -122,17 +122,12 @@ function messageForUser() {
 
 function editPacient() {}
 
-function delPacient(id) {
-  const index = readPacient().findIndex((pacient) => pacient.id === id);
+function delPacient(cpf) {
+  const cpfPacient = readPacient().findIndex((pacient) => pacient.cpf === cpf);
 
-  deletePacient(index);
+  deletePacient(cpfPacient);
   document.querySelector("table").classList.add("hide");
   document.getElementById("input-cpf").value = "";
-}
-
-function generateId() {
-  id++;
-  return id;
 }
 
 function makeTable(pacient) {
@@ -143,19 +138,17 @@ function makeTable(pacient) {
   infoTable.classList.remove("hide");
   insertTable.innerHTML = `
     <thead>
-      <tr>
-        <th>ID</th>
+      <tr>        
         <th>Nome</th>
         <th>Nascimento</th>
         <th>CPF</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>${pacient.id}</td>
+      <tr>        
         <td>${pacient.name}</td>
         <td>${formatDateInput(pacient.nascimento)}</td>
-        <td>${formatCpf(pacient.cpf)}</td>
+        <td id="cpf">${formatCpf(pacient.cpf)}</td>
         <td><i class="ph-bold ph-pencil-simple-line edit"></i></td>
         <td><i class="ph-bold ph-trash-simple delete"></i></td>
       </tr>
@@ -164,9 +157,28 @@ function makeTable(pacient) {
   `;
 }
 
+function openModal(seeNames) {
+  const modal = document.querySelector("dialog");
+
+  if (seeNames.classList.contains("seeNames")) {
+    let allNames = readPacient();
+    modal.innerHTML = "";
+    const titleModal = document.createElement("h4");
+    titleModal.innerText = "PACIENTES";
+    modal.appendChild(titleModal);
+
+    allNames.forEach((pacient) => {
+      const showPacients = document.createElement("p");
+      showPacients.innerHTML = `<b>Nome:</b><span> ${pacient.name}</span><br><b>Cpf:</b> <span>${pacient.cpf}</span>`;
+      modal.appendChild(showPacients);
+    });
+    modal.showModal();
+    clearMessageNotPacient();
+  }
+}
+
 //--------------------------------------------------------------------------------------
 /* EVENTOS */
-let id = 0;
 newCount();
 listenerInputCpf.focus();
 
@@ -209,7 +221,7 @@ btnSavePacient.addEventListener("click", (event) => {
     id: "",
     name: document.getElementById("name").value,
     nascimento: document.getElementById("birth").value,
-    cpf: document.getElementById("cpf").value,
+    cpf: document.getElementById("docCpf").value,
     date: formatDateRegister(),
   };
 
@@ -247,31 +259,12 @@ listenerInputCpf.addEventListener("input", () => {
 
 table.addEventListener("click", (event) => {
   if (event.target.classList.contains("delete")) {
-    const id = Number(document.querySelector("tbody tr td").textContent.trim());
-    delPacient(id);
+    const cpf = document.querySelector("tbody tr td#cpf").textContent;
+
+    delPacient(cpf);
     newCount();
   }
 });
-
-const openModal = (seeNames) => {
-  const modal = document.querySelector("dialog");
-
-  if (seeNames.classList.contains("seeNames")) {
-    let allNames = readPacient();
-    modal.innerHTML = "";
-    const titleModal = document.createElement("h4");
-    titleModal.innerText = "PACIENTES";
-    modal.appendChild(titleModal);
-
-    allNames.forEach((pacient) => {
-      const showPacients = document.createElement("p");
-      showPacients.innerHTML = `<b>Nome:</b><span> ${pacient.name}</span><br><b>Cpf:</b> <span>${pacient.cpf}</span>`;
-      modal.appendChild(showPacients);
-    });
-    modal.showModal();
-    clearMessageNotPacient();
-  }
-};
 
 document.addEventListener("click", (event) => {
   const seeNames = event.target;

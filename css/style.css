@@ -51,14 +51,13 @@
 
 button {
   cursor: pointer;
-  padding: 1.2rem 2rem;
+  padding: 1.3rem 1rem;
   border-radius: 0.8rem;
   border: solid 0.2rem var(--main-color);
 
   background-color: var(--main-color);
   color: white;
   opacity: 0.9;
-  transition: 0.2s;
 }
 
 button:hover {
@@ -117,7 +116,7 @@ h1 {
   gap: 0.3rem;
 
   margin-bottom: 3rem;
-  padding: 2rem 0;
+  padding: 2rem 15rem 0;
 }
 
 h2 {
@@ -219,8 +218,7 @@ i {
   border: solid 0.15rem #c8c8c8;
 }
 
-.delete,
-.exit {
+.delete {
   color: #c80000;
 }
 
@@ -228,6 +226,14 @@ i {
   color: var(--main-color);
 }
 
+.exit {
+  color: #000000;
+}
+
+.exit:hover {
+  font-weight: 600;
+  color: #c80000;
+}
 dialog {
   margin: auto;
   min-width: 40rem;
