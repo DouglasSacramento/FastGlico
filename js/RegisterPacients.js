@@ -1,3 +1,4 @@
+"use strict";
 /* VARIÁVEIS CRUD */
 const getLocalStorage = () =>
   JSON.parse(localStorage.getItem("db_pacient")) ?? [];
@@ -43,6 +44,7 @@ const btnEditPacient = document.getElementById("btn-edit");
 const table = document.querySelector("table");
 const inputName = document.getElementById("name");
 const infoTable = document.querySelector("table");
+const listAllPacients = document.querySelector("h3");
 
 //--------------------------------------------------------------------------------------
 /* FUNÇÕES */
@@ -266,7 +268,7 @@ table.addEventListener("click", (event) => {
   }
 });
 
-document.addEventListener("click", (event) => {
+listAllPacients.addEventListener("click", (event) => {
   const seeNames = event.target;
   openModal(seeNames);
 });

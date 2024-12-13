@@ -234,7 +234,9 @@ i {
   font-weight: 600;
   color: #c80000;
 }
+
 dialog {
+  font-family: "Mulish", serif;
   margin: auto;
   min-width: 40rem;
   max-width: fit-content;
@@ -264,4 +266,73 @@ dialog p {
 
 dialog p:last-child {
   border: none;
+}
+
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 4rem;
+    margin-top: 10rem;
+  }
+
+  .ph-power {
+    font-size: 2rem;
+    position: absolute;
+    top: 22%;
+    right: 1rem;
+  }
+
+  .card {
+    padding: 2rem 2rem 8rem;
+    max-width: 100%;
+  }
+
+  button {
+    width: 8rem;
+  }
+
+  #options-home input {
+    width: 15rem;
+  }
+
+  #options-home {
+    margin-bottom: 3rem;
+    padding: 2rem 0 0;
+  }
+
+  dialog {
+    font-family: "Mulish", serif;
+    margin: auto 2rem;
+    min-width: 10rem;
+    padding: 3rem 3rem 0;
+  }
+
+  dialog p {
+    font-size: 1.2.3rem;
+  }
+
+  thead tr th {
+    font-size: 1.3rem;
+  }
+
+  tbody tr td {
+    font-size: 1.1rem;
+  }
+
+  .card p {
+    font-size: 1.1rem;
+  }
+
+  .home-page h1 {
+    font-size: 5rem;
+  }
+
+  .home-page button {
+    padding: 1.5rem 1.8rem;
+    font-size: 1.6rem;
+    width: 10rem;
+  }
+
+  h3 {
+    font-size: 1.7rem;
+  }
 }
