@@ -25,8 +25,9 @@ const updatePacient = (index, pacient) => {
 
 //CRUD -> Delete
 const deletePacient = (cpf) => {
+  const cpfPacient = readPacient().findIndex((pacient) => pacient.cpf === cpf);
   const dbPacient = readPacient();
-  dbPacient.splice(cpf, 1);
+  dbPacient.splice(cpfPacient, 1);
   setLocalStorage(dbPacient);
 };
 
@@ -118,16 +119,6 @@ function formatDateRegister() {
 
 function messageForUser() {
   document.querySelector("h2").textContent = "Paciente não Encontrado!";
-}
-
-function editPacient() {}
-
-function delPacient(cpf) {
-  const cpfPacient = readPacient().findIndex((pacient) => pacient.cpf === cpf);
-
-  deletePacient(cpfPacient);
-  document.querySelector("table").classList.add("hide");
-  document.getElementById("input-cpf").value = "";
 }
 
 function makeTable(pacient) {
@@ -226,7 +217,13 @@ btnSavePacient.addEventListener("click", (event) => {
   };
 
   const { name, nascimento, cpf } = pacient;
-  if (!name || !nascimento || !cpf) {
+  if (
+    !name ||
+    !nascimento ||
+    !cpf ||
+    nascimento.length < 10 ||
+    cpf.length < 14
+  ) {
     alert("Todos os campos são necessários!");
     return;
   }
@@ -261,8 +258,11 @@ table.addEventListener("click", (event) => {
   if (event.target.classList.contains("delete")) {
     const cpf = document.querySelector("tbody tr td#cpf").textContent;
 
-    delPacient(cpf);
+    deletePacient(cpf);
     newCount();
+    document.querySelector("table").classList.add("hide");
+    document.getElementById("input-cpf").value = "";
+    listenerInputCpf.focus();
   }
 });
 
