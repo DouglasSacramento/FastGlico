@@ -46,7 +46,7 @@
   border: none;
   padding: 1.8rem 2rem;
   font-size: 1.6rem;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.6);
 }
 
 button {

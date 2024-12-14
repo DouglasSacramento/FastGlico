@@ -38,13 +38,14 @@ const countTotal = document.querySelector("h3");
 const btnRegister = document.getElementById("btn-register");
 const btnCancel = document.getElementById("cancel");
 const btnSearch = document.getElementById("btn-search");
-const btnSavePacient = document.getElementById("savePacient");
+const btnSavePacient = document.querySelector("#savePacient");
 const listenerInputCpf = document.getElementById("input-cpf");
 const btnEditPacient = document.getElementById("btn-edit");
 const table = document.querySelector("table");
 const inputName = document.getElementById("name");
 const infoTable = document.querySelector("table");
 const listAllPacients = document.querySelector("h3");
+const form = document.querySelector("#options-register");
 
 //--------------------------------------------------------------------------------------
 /* FUNÇÕES */
@@ -170,6 +171,37 @@ function openModal(seeNames) {
   }
 }
 
+function squeletCreate() {
+  const pacient = {
+    id: "",
+    name: document.getElementById("name").value,
+    nascimento: document.getElementById("birth").value,
+    cpf: document.getElementById("docCpf").value,
+    date: formatDateRegister(),
+  };
+  return pacient;
+}
+
+function squeletEdit(cpf) {
+  const index = readPacient().findIndex((pacient) => pacient.cpf === cpf);
+  const data = readPacient();
+
+  document.getElementById("name").value = data[index].name;
+  document.getElementById("birth").value = data[index].nascimento;
+  document.getElementById("docCpf").value = data[index].cpf;
+}
+
+function toggleClassEdit() {
+  btnSavePacient.classList.remove("create-pacient");
+  btnSavePacient.classList.add("edit-pacient");
+  btnSavePacient.textContent = "Editar";
+}
+
+function toggleClassCreate() {
+  btnSavePacient.classList.remove("edit-pacient");
+  btnSavePacient.classList.add("create-pacient");
+}
+
 //--------------------------------------------------------------------------------------
 /* EVENTOS */
 newCount();
@@ -177,6 +209,7 @@ listenerInputCpf.focus();
 
 btnRegister.addEventListener("click", () => {
   togglePage();
+  toggleClassCreate();
 
   countTotal.classList.add("hide");
   inputName.focus();
@@ -208,47 +241,77 @@ btnSearch.addEventListener("click", (event) => {
   listenerInputCpf.focus();
 });
 
-btnSavePacient.addEventListener("click", (event) => {
+form.addEventListener("click", (event) => {
   event.preventDefault();
-  const pacient = {
-    id: "",
-    name: document.getElementById("name").value,
-    nascimento: document.getElementById("birth").value,
-    cpf: document.getElementById("docCpf").value,
-    date: formatDateRegister(),
-  };
 
-  const { name, nascimento, cpf } = pacient;
-  if (
-    !name ||
-    !nascimento ||
-    !cpf ||
-    nascimento.length < 10 ||
-    cpf.length < 14
-  ) {
-    alert("Todos os campos são necessários!");
+  if (event.target.classList.contains("create-pacient")) {
+    const pacient = squeletCreate();
+    const { name, nascimento, cpf } = pacient;
+    if (
+      !name ||
+      !nascimento ||
+      !cpf ||
+      nascimento.length < 10 ||
+      cpf.length < 14
+    ) {
+      alert("Todos os campos são necessários!");
+      return;
+    }
+
+    if (searchPacientByCpf(cpf)) {
+      alert("Este CPF já está cadastrado!");
+      return;
+    }
+
+    const areSure = confirm("Confirmar a entrega do aparelho?");
+    if (areSure == false) {
+      return;
+    }
+
+    createPacient(pacient);
+    clearInputsRegister();
+    togglePage();
+    clearInputCpf();
+    hideTable();
+    newCount();
+    clearMessageNotPacient();
+    countTotal.classList.remove("hide");
+    listenerInputCpf.focus();
     return;
   }
 
-  if (searchPacientByCpf(cpf)) {
-    alert("Este CPF já está cadastrado!");
+  if (event.target.classList.contains("edit-pacient")) {
+    const cpfPacient = document.querySelector("tbody tr td#cpf").textContent;
+    const index = readPacient().findIndex(
+      (pacient) => pacient.cpf === cpfPacient
+    );
+    const data = readPacient();
+
+    const pacient = {
+      id: data[index].id,
+      name: document.getElementById("name").value,
+      nascimento: document.getElementById("birth").value,
+      cpf: document.getElementById("docCpf").value,
+      date: data[index].date,
+      updated: formatDateRegister(),
+    };
+
+    const areSure = confirm("Confirmar alterações?");
+    if (areSure == false) {
+      return;
+    }
+
+    updatePacient(index, pacient);
+    clearInputsRegister();
+    togglePage();
+    clearInputCpf();
+    hideTable();
+    newCount();
+    clearMessageNotPacient();
+    countTotal.classList.remove("hide");
+    listenerInputCpf.focus();
     return;
   }
-
-  const areSure = confirm("Confirmar a entrega do aparelho?");
-  if (areSure == false) {
-    return;
-  }
-
-  createPacient(pacient);
-  clearInputsRegister();
-  togglePage();
-  clearInputCpf();
-  hideTable();
-  newCount();
-  clearMessageNotPacient();
-  countTotal.classList.remove("hide");
-  listenerInputCpf.focus();
 });
 
 listenerInputCpf.addEventListener("input", () => {
@@ -265,6 +328,15 @@ table.addEventListener("click", (event) => {
     document.querySelector("table").classList.add("hide");
     document.getElementById("input-cpf").value = "";
     listenerInputCpf.focus();
+    return;
+  }
+
+  if (event.target.classList.contains("edit")) {
+    const cpfPacient = document.querySelector("tbody tr td#cpf").textContent;
+
+    togglePage();
+    toggleClassEdit();
+    squeletEdit(cpfPacient);
   }
 });
 
