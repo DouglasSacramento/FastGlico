@@ -202,6 +202,95 @@ function toggleClassCreate() {
   btnSavePacient.classList.add("create-pacient");
 }
 
+function createNewPacient(event) {
+  if (event.target.classList.contains("create-pacient")) {
+    const pacient = squeletCreate();
+    const { name, nascimento, cpf } = pacient;
+    if (
+      !name ||
+      !nascimento ||
+      !cpf ||
+      nascimento.length < 10 ||
+      cpf.length < 14
+    ) {
+      alert("Todos os campos são necessários!");
+      return;
+    }
+
+    if (searchPacientByCpf(cpf)) {
+      alert("Este CPF já está cadastrado!");
+      return;
+    }
+
+    const areSure = confirm("Confirmar a entrega do aparelho?");
+    if (areSure == false) {
+      return;
+    }
+
+    createPacient(pacient);
+    clearInputsRegister();
+    togglePage();
+    clearInputCpf();
+    hideTable();
+    newCount();
+    clearMessageNotPacient();
+    countTotal.classList.remove("hide");
+    listenerInputCpf.focus();
+    return;
+  }
+}
+
+function editingPacient(event) {
+  if (event.target.classList.contains("edit-pacient")) {
+    const cpfPacient = document.querySelector("tbody tr td#cpf").textContent;
+    const index = readPacient().findIndex(
+      (pacient) => pacient.cpf === cpfPacient
+    );
+    const data = readPacient();
+    const pacient = {
+      id: data[index].id,
+      name: document.getElementById("name").value,
+      nascimento: document.getElementById("birth").value,
+      cpf: document.getElementById("docCpf").value,
+      date: data[index].date,
+      updated: formatDateRegister(),
+    };
+
+    const { name, nascimento, cpf } = pacient;
+    if (
+      !name ||
+      !nascimento ||
+      !cpf ||
+      nascimento.length < 10 ||
+      cpf.length < 14
+    ) {
+      alert("Todos os campos são necessários!");
+      return;
+    }
+
+    if (cpf !== data[index].cpf && searchPacientByCpf(cpf)) {
+      alert("Este CPF já está cadastrado!");
+      return;
+    }
+
+    const areSure = confirm("Confirmar alterações?");
+    if (areSure == false) {
+      return;
+    }
+
+    updatePacient(index, pacient);
+    clearInputsRegister();
+    togglePage();
+    clearInputCpf();
+    hideTable();
+    newCount();
+    clearMessageNotPacient();
+    countTotal.classList.remove("hide");
+    listenerInputCpf.focus();
+    return;
+  }
+}
+
 //--------------------------------------------------------------------------------------
 /* EVENTOS */
 newCount();
@@ -244,74 +333,8 @@ btnSearch.addEventListener("click", (event) => {
 form.addEventListener("click", (event) => {
   event.preventDefault();
 
-  if (event.target.classList.contains("create-pacient")) {
-    const pacient = squeletCreate();
-    const { name, nascimento, cpf } = pacient;
-    if (
-      !name ||
-      !nascimento ||
-      !cpf ||
-      nascimento.length < 10 ||
-      cpf.length < 14
-    ) {
-      alert("Todos os campos são necessários!");
-      return;
-    }
-
-    if (searchPacientByCpf(cpf)) {
-      alert("Este CPF já está cadastrado!");
-      return;
-    }
-
-    const areSure = confirm("Confirmar a entrega do aparelho?");
-    if (areSure == false) {
-      return;
-    }
-
-    createPacient(pacient);
-    clearInputsRegister();
-    togglePage();
-    clearInputCpf();
-    hideTable();
-    newCount();
-    clearMessageNotPacient();
-    countTotal.classList.remove("hide");
-    listenerInputCpf.focus();
-    return;
-  }
-
-  if (event.target.classList.contains("edit-pacient")) {
-    const cpfPacient = document.querySelector("tbody tr td#cpf").textContent;
-    const index = readPacient().findIndex(
-      (pacient) => pacient.cpf === cpfPacient
-    );
-    const data = readPacient();
-
-    const pacient = {
-      id: data[index].id,
-      name: document.getElementById("name").value,
-      nascimento: document.getElementById("birth").value,
-      cpf: document.getElementById("docCpf").value,
-      date: data[index].date,
-      updated: formatDateRegister(),
-    };
-
-    const areSure = confirm("Confirmar alterações?");
-    if (areSure == false) {
-      return;
-    }
-
-    updatePacient(index, pacient);
-    clearInputsRegister();
-    togglePage();
-    clearInputCpf();
-    hideTable();
-    newCount();
-    clearMessageNotPacient();
-    countTotal.classList.remove("hide");
-    listenerInputCpf.focus();
-    return;
-  }
+  createNewPacient(event);
+  editingPacient(event);
 });
 
 listenerInputCpf.addEventListener("input", () => {
