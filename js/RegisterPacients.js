@@ -42,7 +42,11 @@ const btnSavePacient = document.querySelector("#savePacient");
 const listenerInputCpf = document.getElementById("input-cpf");
 const btnEditPacient = document.getElementById("btn-edit");
 const table = document.querySelector("table");
+
 const inputName = document.getElementById("name");
+const inputBirth = document.getElementById("birth");
+const inputCpf = document.getElementById("docCpf");
+
 const infoTable = document.querySelector("table");
 const listAllPacients = document.querySelector("h3");
 const form = document.querySelector("#options-register");
@@ -174,9 +178,9 @@ function openModal(seeNames) {
 function squeletCreate() {
   const pacient = {
     id: "",
-    name: document.getElementById("name").value,
-    nascimento: document.getElementById("birth").value,
-    cpf: document.getElementById("docCpf").value,
+    name: inputName.value.trim(),
+    nascimento: inputBirth.value,
+    cpf: inputCpf.value,
     date: formatDateRegister(),
   };
   return pacient;
@@ -200,6 +204,7 @@ function toggleClassEdit() {
 function toggleClassCreate() {
   btnSavePacient.classList.remove("edit-pacient");
   btnSavePacient.classList.add("create-pacient");
+  btnSavePacient.textContent = "Salvar";
 }
 
 function createNewPacient(event) {
@@ -249,9 +254,9 @@ function editingPacient(event) {
     const data = readPacient();
     const pacient = {
       id: data[index].id,
-      name: document.getElementById("name").value,
-      nascimento: document.getElementById("birth").value,
-      cpf: document.getElementById("docCpf").value,
+      name: inputName.value.trim(),
+      nascimento: inputBirth.value,
+      cpf: inputCpf.value,
       date: data[index].date,
       updated: formatDateRegister(),
     };
@@ -345,6 +350,11 @@ listenerInputCpf.addEventListener("input", () => {
 table.addEventListener("click", (event) => {
   if (event.target.classList.contains("delete")) {
     const cpf = document.querySelector("tbody tr td#cpf").textContent;
+
+    const areSure = confirm("Realmente deseja excluir paciente?");
+    if (areSure == false) {
+      return;
+    }
 
     deletePacient(cpf);
     newCount();
